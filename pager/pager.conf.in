@@ -1,0 +1,13 @@
+input {
+  #http {
+  #}
+  stdin { }
+}
+
+output {
+  pagerduty {
+    service_key => "PAGERDUTY_API_KEY"
+    description => "Web site alert"
+  }
+  stdout { codec => rubydebug } 
+}
