@@ -1,0 +1,56 @@
+{
+  "trigger": {
+    "schedule": {
+      "interval": "15s"
+    }
+  },
+  "input": {
+    "search": {
+      "request": {
+        "indices": [
+          "logstash-*"
+        ],
+        "search_type": "count",
+        "body": {
+          "query": {
+            "filtered": {
+              "filter": {
+                "bool": {
+                  "must": {
+                    "range": {
+                      "@timestamp": {
+                        "gte": "now-2m",
+                        "lte": "now"
+                      }
+                    } 
+                  }, "must_not": {
+                    "term": {
+                      "result": "status_200"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "throttle_period": "30m", 
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": { "gte": 1 }
+    }
+  },
+  "actions": {
+    "logstash_hook": {
+      "webhook": { 
+        "method": "POST",
+        "host": "pager",
+        "port": 9400,
+        "path": "/",
+        "body": "There were {{ctx.payload.hits.total}} web health check failures in the last 2 minutes"
+      }
+    }
+  }
+}
