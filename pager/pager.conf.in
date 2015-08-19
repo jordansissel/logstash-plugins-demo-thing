@@ -2,6 +2,7 @@ input {
   http {
     port => 9400
     codec => json
+    type => "webhook"
   }
 }
 
