@@ -1,7 +1,8 @@
 input {
-  #http {
-  #}
-  stdin { }
+  http {
+    port => 9400
+    codec => json
+  }
 }
 
 output {
